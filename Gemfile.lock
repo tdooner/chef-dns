@@ -1,0 +1,28 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    celluloid (0.16.0)
+      timers (~> 4.0.0)
+    celluloid-io (0.16.2)
+      celluloid (>= 0.16.0)
+      nio4r (>= 1.1.0)
+    chef-api (0.5.0)
+      logify (~> 0.1)
+      mime-types
+    hitimes (1.2.2)
+    logify (0.2.0)
+    mime-types (2.4.3)
+    nio4r (1.1.0)
+    rubydns (1.0.1)
+      celluloid (~> 0.16.0)
+      celluloid-io (~> 0.16.2)
+      timers (~> 4.0.1)
+    timers (4.0.1)
+      hitimes
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  chef-api
+  rubydns
