@@ -1,0 +1,5 @@
+require 'chef-dns/cache'
+require 'chef-dns/server'
+require 'chef-dns/record_finder'
+require 'chef-dns/record-finders/A'
+require 'chef-dns/record-finders/PTR'

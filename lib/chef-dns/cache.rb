@@ -1,0 +1,2 @@
+class ChefCache
+end
