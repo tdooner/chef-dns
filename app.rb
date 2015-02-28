@@ -5,11 +5,11 @@ require 'ipaddr'
 
 ChefAPI.configure do |config|
   config.endpoint = 'https://chef.brigade.com/'
-  config.flavor = :open_source
   config.client = 'tom-test-dns'
   config.key = '/mnt/ssd/tom/dev/ruby/chef-dns/client.pem'
-  config.ssl_verify = false
 end
+
+OpenSSL::SSL::SSLContext::DEFAULT_CERT_STORE.add_file('/mnt/ssd/tom/dev/ruby/chef-dns/chef_brigade_com.crt')
 
 class ChefServer < RubyDNS::RuleBasedServer
   IN = Resolv::DNS::Resource::IN
