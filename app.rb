@@ -13,30 +13,20 @@ end
 
 class ChefServer < RubyDNS::RuleBasedServer
   IN = Resolv::DNS::Resource::IN
-  Name = Resolv::DNS::Name
 
-  def initialize(*)
-    super
-    Thread.new { loop { sleep 5; update_rules } }
-  end
+  def process(name, resource_class, transaction)
+    if resource_class == IN::A
+      node = ChefAPI::Resource::Node.fetch(name)
 
-  def update_rules
-    nodes = ChefAPI::Resource::Search.query('node', 'fqdn:*.iad.brigade.com')
+      transaction.respond!(node.automatic['ipaddress'], ttl: 60)
+    elsif resource_class == IN::PTR
+      ipaddress = name.split('.')[0..3].reverse.join('.')
+      results = ChefAPI::Resource::Search.query('node', "ipaddress:#{ipaddress}")
 
-    new_rules = []
-    nodes.rows.each do |node|
-      puts "Registering node #{node['automatic']['fqdn']}"
+      fqdn = results.rows.first['automatic']['fqdn']
 
-      new_rules << Rule.new([node['automatic']['fqdn'], IN::A], ->(t) do
-        t.respond!(node['automatic']['ipaddress'], ttl: 60)
-      end)
-
-      new_rules << Rule.new([IPAddr.new(node['automatic']['ipaddress']).reverse, IN::PTR], ->(t) do
-        t.respond!(Name.create(node['automatic']['fqdn']), ttl: 60)
-      end)
+      transaction.respond!(Resolv::DNS::Name.create(fqdn), ttl: 60)
     end
-
-    @rules = new_rules
   end
 end
 
